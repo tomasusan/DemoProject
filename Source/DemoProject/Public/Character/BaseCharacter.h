@@ -53,6 +53,7 @@ public:
 	virtual void MoveRight(const float Val);
 	virtual void LookUp(const float Val);
 	virtual void LookRight(const float Val);
+	virtual void GetHit();
 
 	void SetCanMove(const bool NewState) {CanMove = NewState;}
 	void SetIsSprint(const bool NewState) {IsSprint = NewState;}

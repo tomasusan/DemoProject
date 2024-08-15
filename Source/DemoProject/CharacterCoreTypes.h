@@ -17,6 +17,9 @@ struct FComboInfo
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	int32 CurrentWantCombo = -1;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	int32 CurrentInCombo = -1;
 };
 
 USTRUCT(BlueprintType)

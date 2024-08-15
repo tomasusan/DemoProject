@@ -7,7 +7,7 @@
 #include "PlayerCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-DEFINE_LOG_CATEGORY_STATIC(TaskLog, All, All);
+//DEFINE_LOG_CATEGORY_STATIC(TaskLog, All, All);
 
 USetFocusTaskNode::USetFocusTaskNode()
 {

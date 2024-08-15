@@ -3,6 +3,10 @@
 
 #include "Character/BaseEnemyCharacter.h"
 
+void ABaseEnemyCharacter::RandomAttack()
+{
+}
+
 void ABaseEnemyCharacter::OnEntryAnim()
 {
 	InAnim = true;
@@ -23,4 +27,15 @@ void ABaseEnemyCharacter::Skill_2()
 
 void ABaseEnemyCharacter::Die()
 {
+}
+
+void ABaseEnemyCharacter::InitAnimNotify()
+{
+}
+
+bool ABaseEnemyCharacter::GeneratePossibleAttack()
+{
+	const float Random = FMath::RandRange(0.f, 100.f);
+	if (Random <= 100 * AttackPossibility) return true;
+	return false;
 }

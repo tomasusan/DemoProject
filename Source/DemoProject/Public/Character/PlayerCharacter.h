@@ -11,6 +11,8 @@
  * 
  */
 
+class UWeaponComponent;
+
 UENUM()
 enum EDesireDirection:uint8
 {
@@ -39,17 +41,33 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Anim")
 	TArray<UAnimMontage*> AvoidAnims;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
+	FName RightHandWeaponSocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
+	FName LeftHandWeaponSocketName;
+
 	UFUNCTION(BlueprintCallable)
 	void SetWantCombo() { ComboInfo.WantCombo = false; }
 
 	UFUNCTION(BlueprintCallable)
 	void SetOutAnim();
 
+	UFUNCTION(BlueprintCallable)
+	void AddCombo();
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetCurrentCombo() const { return ComboInfo.CurrentInCombo; }
+
 	// UFUNCTION(BlueprintCallable)
 	// void SetOutAnim();
 
 	UFUNCTION(BlueprintCallable)
 	FComboInfo GetComboInfo() const { return ComboInfo; }
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UWeaponComponent* WeaponComponent;
 
 public:
 	virtual void Attack() override;
@@ -63,7 +81,7 @@ public:
 	void CloseCombo();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	void LoadAttackNotifyState();
 
 private:
 	void InitAnimation();
@@ -74,6 +92,8 @@ private:
 	void OnStartAvoid();
 	void OnEndVoid();
 	void OnCheckShiftDown();
+	template<typename T>
+	T* SpawnWeapon(TSubclassOf<T> WeaponClass,FName SocketName);
 	FComboInfo ComboInfo;
 
 	bool CanAttack = true;
@@ -83,6 +103,4 @@ private:
 	void ProcessDesireDirection();
 
 	FTimerHandle SprintTimer;
-
-	
 };

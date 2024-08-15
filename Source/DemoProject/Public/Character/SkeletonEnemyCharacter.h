@@ -50,6 +50,9 @@ public:
 	virtual void Skill_2() override;
 	virtual void Die() override;
 
+	virtual void GetHit() override;
+	virtual void RandomAttack() override;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	USkeletalMeshComponent* HelmetsMesh;
@@ -92,5 +95,6 @@ protected:
 
 private:
 	void SetArmor();
-	void InitAnimNotify();
+	virtual void InitAnimNotify() override;
+	void InitLeaderSkeletonComponent();
 };

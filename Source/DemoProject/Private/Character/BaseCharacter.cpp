@@ -106,6 +106,10 @@ auto ABaseCharacter::LookRight(float Val) -> void
 	AddControllerYawInput(Val);;
 }
 
+void ABaseCharacter::GetHit()
+{
+}
+
 void ABaseCharacter::Attack()
 {
 }
@@ -138,7 +142,7 @@ void ABaseCharacter::OnImpacted()
 void ABaseCharacter::ProcessImpactedLocation()
 {
 	const float DeltaX = MathUtils::GetDeltaX(ImpactInfo.CurrentVelocity,
-	                                          MathUtils::GetV0(ImpactInfo.CurrentVelocity,
+                       	                                          MathUtils::GetV0(ImpactInfo.CurrentVelocity,
 	                                                           -ImpactInfo.Accel,
 	                                                           ImpactInfo.DeltaTime), ImpactInfo.DeltaTime);
 

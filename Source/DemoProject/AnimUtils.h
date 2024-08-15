@@ -34,4 +34,20 @@ public:
 
 		return Ret;
 	}
+
+	template<typename T>
+	static TArray<T*> FindNotifyStatesByClass(UAnimSequenceBase* Animation)
+	{
+		TArray<T*> Ret;
+		const auto NotifyEvents = Animation->Notifies;
+		for(auto NotifyEvent:NotifyEvents)
+		{
+			auto AnimNotify = Cast<T>(NotifyEvent.NotifyStateClass);
+			if(AnimNotify)
+			{
+				Ret.Add(AnimNotify);
+			}
+		}
+		return Ret;
+	}
 };

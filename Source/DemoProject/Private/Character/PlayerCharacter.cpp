@@ -3,6 +3,7 @@
 
 #include "Character/PlayerCharacter.h"
 
+#include "Animation/CallAttackNotifyState.h"
 #include "Animation/CloseComboAnimNotify.h"
 #include "Animation/ComboAnimNotify12.h"
 #include "Animation/CommoAnimNotify23.h"
@@ -17,18 +18,25 @@
 #include "Character/BaseCharacterMovementComponent.h"
 #include "DemoProject/AnimUtils.h"
 #include "DemoProject/MathUtils.h"
+#include "Component/WeaponComponent.h"
+#include "Weapon/BaseWeaponActor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(PlayerCharacterLog, All, All);
 
 APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 	ObjInit.SetDefaultSubobjectClass<UBaseCharacterMovementComponent>(ABaseCharacter::CharacterMovementComponentName))
 {
+	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	InitAnimation();
+
+	WeaponComponent->CurrentRightHandWeapon = SpawnWeapon(WeaponComponent->RightHandWeapon, RightHandWeaponSocketName);
+	WeaponComponent->CurrentLeftHandWeapon = SpawnWeapon(WeaponComponent->LeftHandWeapon, LeftHandWeaponSocketName);
+	
 }
 
 void APlayerCharacter::Attack()
@@ -40,6 +48,8 @@ void APlayerCharacter::Attack()
 		{
 			PlayAnimMontage(AttackAnim);
 			SetCanMove(false);
+			ComboInfo.CurrentWantCombo = 0;
+			ComboInfo.CurrentInCombo = 0;
 		}
 		else
 		{
@@ -58,6 +68,7 @@ void APlayerCharacter::ProAttack()
 		if (!ComboInfo.InAnim)
 		{
 			PlayAnimMontage(ProAttackAnim);
+			ComboInfo.CurrentInCombo = 0;
 		}
 		else
 		{
@@ -102,13 +113,11 @@ void APlayerCharacter::MoveRight(const float Val)
 void APlayerCharacter::OpenCombo()
 {
 	ComboInfo.CanCombo = true;
-	UE_LOG(PlayerCharacterLog, Warning, TEXT("Now Open Combo"));
 }
 
 void APlayerCharacter::CloseCombo()
 {
 	ComboInfo.CanCombo = false;
-	UE_LOG(PlayerCharacterLog, Warning, TEXT("Now Close Combo"));
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -118,6 +127,18 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (PlayerInputComponent)
 	{
 		PlayerInputComponent->BindAction("Attack_Pro", IE_Pressed, this, &APlayerCharacter::ProAttack);
+	}
+}
+
+void APlayerCharacter::LoadAttackNotifyState()
+{
+	const auto Notifies = AnimUtils::FindNotifyStatesByClass<UCallAttackNotifyState>(AttackAnim);
+	UE_LOG(PlayerCharacterLog, Warning, TEXT("Load %d States"), Notifies.Num());
+	
+	for(const auto CallAttackNotify:Notifies)
+	{
+		CallAttackNotify->CallAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::CallAttack);
+		CallAttackNotify->EndAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::EndAttack);
 	}
 }
 
@@ -133,7 +154,6 @@ void APlayerCharacter::InitAnimation()
 	const auto WantCombo2Notify = AnimUtils::FindNotifyByClass<UComboAnimNotify12>(AttackAnim);
 	const auto WantCombo3Notify = AnimUtils::FindNotifyByClass<UCommoAnimNotify23>(AttackAnim);
 	const auto StopDetectNotify = AnimUtils::FindNotifyByClass<UStopDetectAnimNotify>(AttackAnim);
-	
 
 
 	for (const auto OpenComboAnimNotify : AnimUtils::FindNotifiesByClass<UOpenComboAnimNotify>(ProAttackAnim))
@@ -182,6 +202,8 @@ void APlayerCharacter::InitAnimation()
 
 	EntryAnimNotify->OnNotified.AddUObject(this, &APlayerCharacter::SetEntryAnim);
 	OutAnimNotify->OnNotified.AddUObject(this, &APlayerCharacter::SetOutAnim);
+
+	LoadAttackNotifyState();
 }
 
 void APlayerCharacter::SetEntryAnim()
@@ -194,11 +216,17 @@ void APlayerCharacter::SetEntryAnim()
 void APlayerCharacter::SetOutAnim()
 {
 	ComboInfo.InAnim = false;
-	ComboInfo.CurrentWantCombo = 0;
+	ComboInfo.CurrentWantCombo = -1;
+	ComboInfo.CurrentInCombo = -1;
 	ComboInfo.WantCombo = false;
 	ComboInfo.CanCombo = false;
 	SetCanMove(true);
 	UE_LOG(PlayerCharacterLog, Warning, TEXT("Now Out Anim"));
+}
+
+void APlayerCharacter::AddCombo()
+{
+	ComboInfo.CurrentInCombo++;
 }
 
 void APlayerCharacter::OnStopDetectInput()
@@ -209,13 +237,13 @@ void APlayerCharacter::OnStopDetectInput()
 void APlayerCharacter::WantCombo2()
 {
 	ComboInfo.CanCombo = true;
-	ComboInfo.CurrentWantCombo = 2;
+	ComboInfo.CurrentWantCombo = 1;
 }
 
 void APlayerCharacter::WantCombo3()
 {
 	ComboInfo.CanCombo = true;
-	ComboInfo.CurrentWantCombo = 3;
+	ComboInfo.CurrentWantCombo = 2;
 }
 
 void APlayerCharacter::OnStartAvoid()
@@ -241,6 +269,20 @@ void APlayerCharacter::OnCheckShiftDown()
 	{
 		SetIsSprint(true);
 	}
+}
+
+template<typename T>
+T* APlayerCharacter::SpawnWeapon(TSubclassOf<T> WeaponClass,FName SocketName)
+{
+	if(!GetWorld()) return nullptr;
+	auto SocketLocation = GetMesh()->GetSocketLocation(SocketName);
+	const auto CurrentWeapon = GetWorld()->SpawnActor<T>(WeaponClass);
+
+	if(!CurrentWeapon) return nullptr;
+	const FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget, false);
+	CurrentWeapon->AttachToComponent(GetMesh(), Rules, SocketName);
+
+	return CurrentWeapon;
 }
 
 void APlayerCharacter::ProcessDesireDirection()
