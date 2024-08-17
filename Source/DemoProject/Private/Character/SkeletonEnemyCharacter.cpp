@@ -7,6 +7,8 @@
 #include "Animation/OutAnimNotify.h"
 #include "DemoProject/AnimUtils.h"
 
+DEFINE_LOG_CATEGORY_STATIC(SkeletonCharacterLog, All, All);
+
 ASkeletonEnemyCharacter::ASkeletonEnemyCharacter()
 {
 	InitLeaderSkeletonComponent();
@@ -39,6 +41,7 @@ void ASkeletonEnemyCharacter::Die()
 void ASkeletonEnemyCharacter::GetHit()
 {
 	Super::GetHit();
+	UE_LOG(SkeletonCharacterLog, Warning,TEXT("Now Got Hit"));
 	OnImpacted();
 	PlayAnimMontage(HitAnim_Light);
 }

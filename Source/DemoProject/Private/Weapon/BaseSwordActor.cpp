@@ -9,7 +9,7 @@ DEFINE_LOG_CATEGORY_STATIC(SwordLog, All, All);
 void ABaseSwordActor::ApplyAttack()
 {
 	Super::ApplyAttack();
-	UE_LOG(SwordLog, Warning, TEXT("Now Sword Apply Damage"));
+	//UE_LOG(SwordLog, Warning, TEXT("Now Sword Apply Damage"));
 
 	const auto SocketStart = WeaponMeshComponent->GetSocketTransform(DamageStartSocketName).GetLocation();
 	const auto SocketEnd = WeaponMeshComponent->GetSocketTransform(DamageEndSocketName).GetLocation();
@@ -23,6 +23,7 @@ void ABaseSwordActor::ApplyAttack()
 		{
 			HitCharacterPool.Add(HitActor);
 			HitActor->GetHit();
+			UE_LOG(SwordLog, Warning, TEXT("Hit: %s"), *HitActor->GetName())
 		}
 	}
 }
@@ -31,5 +32,5 @@ void ABaseSwordActor::EndAttack()
 {
 	Super::EndAttack();
 
-	UE_LOG(SwordLog, Warning, TEXT("End Attack"));
+	//UE_LOG(SwordLog, Warning, TEXT("End Attack"));
 }

@@ -25,7 +25,7 @@ void UCheckDistanceService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 
 	BlackBoard->SetValueAsFloat(ToPlayerDistance.SelectedKeyName, FullLength);
 
-	UE_LOG(ServiceLog, Warning, TEXT("To Player Distance: %f"), FullLength);
+	//UE_LOG(ServiceLog, Warning, TEXT("To Player Distance: %f"), FullLength);
 }
 
 UCheckDistanceService::UCheckDistanceService()

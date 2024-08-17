@@ -16,6 +16,7 @@
 #include "Animation/StopDetectAnimNotify.h"
 #include "BehaviorTree/Blackboard/BlackboardKey.h"
 #include "Character/BaseCharacterMovementComponent.h"
+#include "Component/BackpackComponent.h"
 #include "DemoProject/AnimUtils.h"
 #include "DemoProject/MathUtils.h"
 #include "Component/WeaponComponent.h"
@@ -27,6 +28,7 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 	ObjInit.SetDefaultSubobjectClass<UBaseCharacterMovementComponent>(ABaseCharacter::CharacterMovementComponentName))
 {
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
+	BackpackComponent = CreateDefaultSubobject<UBackpackComponent>("BackpackComponent");
 }
 
 void APlayerCharacter::BeginPlay()

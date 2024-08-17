@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Character/BaseCharacter.h"
+#include "Component/BackpackComponent.h"
 #include "DemoProject/CharacterCoreTypes.h"
+#include "DemoProject/ItemCoreTypes.h"
 #include "PlayerCharacter.generated.h"
 
 /**
  * 
  */
 
+class UBackpackComponent;
 class UWeaponComponent;
 
 UENUM()
@@ -69,6 +72,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	UWeaponComponent* WeaponComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UBackpackComponent* BackpackComponent;
+
 public:
 	virtual void Attack() override;
 	virtual void ProAttack();
@@ -76,6 +82,8 @@ public:
 	virtual void EndSprint() override;
 	virtual void MoveForward(const float Val) override;
 	virtual void MoveRight(const float Val) override;
+
+	TArray<FItemInBackpackState> GetBackpackItems() const {return BackpackComponent->GetItemsToBackpack();}
 
 	void OpenCombo();
 	void CloseCombo();
