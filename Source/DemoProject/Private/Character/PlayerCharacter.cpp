@@ -1,25 +1,23 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/PlayerCharacter.h"
-
+#include "PlayerCharacter.h"
 #include "Animation/CallAttackNotifyState.h"
 #include "Animation/CloseComboAnimNotify.h"
 #include "Animation/ComboAnimNotify12.h"
 #include "Animation/CommoAnimNotify23.h"
 #include "Animation/EndAvoidAnimNotify.h"
 #include "Animation/EntryAnimNotify.h"
-#include "Animation/HitLightBaseAnimNotify.h"
 #include "Animation/OpenComboAnimNotify.h"
 #include "Animation/OutAnimNotify.h"
 #include "Animation/StartAvoidAnimNotify.h"
 #include "Animation/StopDetectAnimNotify.h"
-#include "BehaviorTree/Blackboard/BlackboardKey.h"
 #include "Character/BaseCharacterMovementComponent.h"
 #include "Component/BackpackComponent.h"
 #include "DemoProject/AnimUtils.h"
-#include "DemoProject/MathUtils.h"
 #include "Component/WeaponComponent.h"
+#include "Components/BoxComponent.h"
+#include "Interface/InteractInterface.h"
 #include "Weapon/BaseWeaponActor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(PlayerCharacterLog, All, All);
@@ -29,6 +27,21 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 {
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 	BackpackComponent = CreateDefaultSubobject<UBackpackComponent>("BackpackComponent");
+
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
+	BoxCollision->SetBoxExtent(FVector(32.f, 32.f, 96.f));
+	BoxCollision->bDynamicObstacle = true;
+	BoxCollision->SetupAttachment(GetRootComponent());
+
+	BoxCollision->SetCollisionResponseToAllChannels(ECR_Overlap);
+
+	// FScriptDelegate OverlapBeginDelegate;
+	// OverlapBeginDelegate.BindUFunction(this, "OnOverlapBegin");
+	// BoxCollision->OnComponentBeginOverlap.Add(OverlapBeginDelegate);
+	//
+	// FScriptDelegate OverlapEndDelegate;
+	// OverlapEndDelegate.BindUFunction(this, "OnOverlapEnd");
+	// BoxCollision->OnComponentEndOverlap.Add(OverlapEndDelegate);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -38,7 +51,6 @@ void APlayerCharacter::BeginPlay()
 
 	WeaponComponent->CurrentRightHandWeapon = SpawnWeapon(WeaponComponent->RightHandWeapon, RightHandWeaponSocketName);
 	WeaponComponent->CurrentLeftHandWeapon = SpawnWeapon(WeaponComponent->LeftHandWeapon, LeftHandWeaponSocketName);
-	
 }
 
 void APlayerCharacter::Attack()
@@ -129,6 +141,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (PlayerInputComponent)
 	{
 		PlayerInputComponent->BindAction("Attack_Pro", IE_Pressed, this, &APlayerCharacter::ProAttack);
+		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
 	}
 }
 
@@ -136,12 +149,26 @@ void APlayerCharacter::LoadAttackNotifyState()
 {
 	const auto Notifies = AnimUtils::FindNotifyStatesByClass<UCallAttackNotifyState>(AttackAnim);
 	UE_LOG(PlayerCharacterLog, Warning, TEXT("Load %d States"), Notifies.Num());
-	
-	for(const auto CallAttackNotify:Notifies)
+
+	for (const auto CallAttackNotify : Notifies)
 	{
 		CallAttackNotify->CallAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::CallAttack);
 		CallAttackNotify->EndAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::EndAttack);
 	}
+}
+
+void APlayerCharacter::OnOverlapBegin(AActor* OtherActor)
+{
+	UE_LOG(PlayerCharacterLog, Display, TEXT("%s: Start Overlap"), *OtherActor->GetName());
+
+	CurrentDetectedActor = OtherActor;
+	DetectActor = true;
+}
+
+void APlayerCharacter::OnOverlapEnd(AActor* OtherActor)
+{
+	CurrentDetectedActor = nullptr;
+	DetectActor = false;
 }
 
 void APlayerCharacter::InitAnimation()
@@ -273,14 +300,22 @@ void APlayerCharacter::OnCheckShiftDown()
 	}
 }
 
-template<typename T>
-T* APlayerCharacter::SpawnWeapon(TSubclassOf<T> WeaponClass,FName SocketName)
+void APlayerCharacter::Interact()
 {
-	if(!GetWorld()) return nullptr;
-	auto SocketLocation = GetMesh()->GetSocketLocation(SocketName);
+	if(!DetectActor) return;
+	if(CurrentDetectedActor->Implements<UInteractInterface>())
+	{
+		IInteractInterface::Execute_Interact(CurrentDetectedActor, this);
+	}
+}
+
+template <typename T>
+T* APlayerCharacter::SpawnWeapon(TSubclassOf<T> WeaponClass, FName SocketName)
+{
+	if (!GetWorld()) return nullptr;
 	const auto CurrentWeapon = GetWorld()->SpawnActor<T>(WeaponClass);
 
-	if(!CurrentWeapon) return nullptr;
+	if (!CurrentWeapon) return nullptr;
 	const FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget, false);
 	CurrentWeapon->AttachToComponent(GetMesh(), Rules, SocketName);
 
@@ -298,4 +333,8 @@ void APlayerCharacter::ProcessDesireDirection()
 		DesireDirection = Back;
 	else if (Direction >= -135 && Direction < -45)
 		DesireDirection = Right;
+}
+
+void APlayerCharacter::BackpackAdd()
+{
 }

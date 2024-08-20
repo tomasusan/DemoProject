@@ -8,12 +8,12 @@
 #include "BackpackComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DEMOPROJECT_API UBackpackComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UBackpackComponent();
 
@@ -21,9 +21,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemInBackpackState> GetItemsToBackpack() const;
@@ -34,6 +35,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="BackpackComponent")
 	TArray<FName> Items_ID;
 
+	void BackpackAdd(const FItemInBackpackState& NewItem);
+
 private:
-	static FItemInBackpackState GetInBackpackState(const FItemBasicInfo& Info);
+	void LoadToBackpack(TArray<FName> NewItems);
+
+	TArray<FItemInBackpackState> Items;
 };

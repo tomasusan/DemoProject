@@ -15,6 +15,7 @@
 
 class UBackpackComponent;
 class UWeaponComponent;
+class UBoxComponent;
 
 UENUM()
 enum EDesireDirection:uint8
@@ -75,6 +76,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	UBackpackComponent* BackpackComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UBoxComponent* BoxCollision;
+
 public:
 	virtual void Attack() override;
 	virtual void ProAttack();
@@ -83,13 +87,19 @@ public:
 	virtual void MoveForward(const float Val) override;
 	virtual void MoveRight(const float Val) override;
 
-	TArray<FItemInBackpackState> GetBackpackItems() const {return BackpackComponent->GetItemsToBackpack();}
+	TArray<FItemInBackpackState> GetBackpackItems() const { return BackpackComponent->GetItemsToBackpack(); }
 
 	void OpenCombo();
 	void CloseCombo();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void LoadAttackNotifyState();
+
+	UFUNCTION(BlueprintCallable)
+	void OnOverlapBegin(AActor* OtherActor);
+
+	UFUNCTION(BlueprintCallable)
+	void OnOverlapEnd(AActor* OtherActor);
 
 private:
 	void InitAnimation();
@@ -100,15 +110,21 @@ private:
 	void OnStartAvoid();
 	void OnEndVoid();
 	void OnCheckShiftDown();
-	template<typename T>
-	T* SpawnWeapon(TSubclassOf<T> WeaponClass,FName SocketName);
-	FComboInfo ComboInfo;
+	void Interact();
+	void ProcessDesireDirection();
+	void BackpackAdd();
+
+	template <typename T>
+	T* SpawnWeapon(TSubclassOf<T> WeaponClass, FName SocketName);
 
 	bool CanAttack = true;
 	bool ShiftDown = false;
+	bool DetectActor = false;
+	
 	EDesireDirection DesireDirection = EDesireDirection::Front;
-
-	void ProcessDesireDirection();
-
+	FComboInfo ComboInfo;
 	FTimerHandle SprintTimer;
+	
+	UPROPERTY()
+	AActor* CurrentDetectedActor;
 };

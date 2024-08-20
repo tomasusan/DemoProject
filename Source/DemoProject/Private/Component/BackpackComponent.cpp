@@ -3,6 +3,8 @@
 
 #include "Component/BackpackComponent.h"
 
+#include "DemoProject/ItemInfoUtils.h"
+
 // Sets default values for this component's properties
 UBackpackComponent::UBackpackComponent()
 {
@@ -19,6 +21,7 @@ void UBackpackComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	LoadToBackpack(Items_ID);
 	// ...
 }
 
@@ -34,31 +37,38 @@ void UBackpackComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 TArray<FItemInBackpackState> UBackpackComponent::GetItemsToBackpack() const
 {
-	TArray<FItemInBackpackState> Ret;
-	for(const auto Item:Items_ID)
+	return Items;
+}
+
+void UBackpackComponent::BackpackAdd(const FItemInBackpackState& NewItem)
+{
+	for (auto Item : Items)
 	{
-		if(Datatable)
+		if (Item.ID == NewItem.ID)
 		{
-			const auto FromTableInfo = Datatable->FindRow<FItemBasicInfo>(Item, "");
-			if(FromTableInfo)
+			if (Item.Stackable && Item.CurrentNum < Item.MaxStackNum)
 			{
-				Ret.Add(GetInBackpackState(*FromTableInfo));
+				Item.CurrentNum++;
+				return;
+			}
+			else
+			{
+				Items.Add(NewItem);
+				return;
 			}
 		}
 	}
-	return Ret;
+	Items.Add(NewItem);
 }
 
-FItemInBackpackState UBackpackComponent::GetInBackpackState(const FItemBasicInfo& Info)
+void UBackpackComponent::LoadToBackpack(TArray<FName> NewItems)
 {
-	FItemInBackpackState Ret;
-	Ret.ID = Info.ID;
-	Ret.Icon = Info.Icon;
-	Ret.Stackable = Info.Stackable;
-	Ret.CurrentNum = 1;
-	Ret.ItemName = Info.ItemName;
-	Ret.ItemType = Info.ItemType;
-	Ret.MaxStackNum = Info.MaxStackNum;
-
-	return Ret;
+	for (const auto Item : NewItems)
+	{
+		if (const auto TableInfo = Datatable->FindRow<FItemBasicInfo>(Item, ""))
+		{
+			const auto InBackpackInfo = FItemInfoUtils::ConvertInBackpackState(*TableInfo);
+			BackpackAdd(InBackpackInfo);
+		}
+	}
 }
