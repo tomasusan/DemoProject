@@ -57,6 +57,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemInBackpackState> GetItems();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SwitchBackpack();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowDetectActorBar();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HideDetectActorBar();
+
 	UPROPERTY()
 	TArray<UBackpackCellWidget*> Cells;
 };

@@ -13,6 +13,8 @@
  * 
  */
 
+class UInteractComponent;
+class UUIComponent;
 class UBackpackComponent;
 class UWeaponComponent;
 class UBoxComponent;
@@ -77,6 +79,12 @@ protected:
 	UBackpackComponent* BackpackComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UUIComponent* UIComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UInteractComponent* InteractComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	UBoxComponent* BoxCollision;
 
 public:
@@ -86,6 +94,8 @@ public:
 	virtual void EndSprint() override;
 	virtual void MoveForward(const float Val) override;
 	virtual void MoveRight(const float Val) override;
+	void LoadItemInfo(const FItemBasicInfo& Info) const;
+	void BackpackAdd(const FItemBasicInfo& NewItem) const;
 
 	TArray<FItemInBackpackState> GetBackpackItems() const { return BackpackComponent->GetItemsToBackpack(); }
 
@@ -94,12 +104,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void LoadAttackNotifyState();
-
-	UFUNCTION(BlueprintCallable)
-	void OnOverlapBegin(AActor* OtherActor);
-
-	UFUNCTION(BlueprintCallable)
-	void OnOverlapEnd(AActor* OtherActor);
 
 private:
 	void InitAnimation();
@@ -119,12 +123,8 @@ private:
 
 	bool CanAttack = true;
 	bool ShiftDown = false;
-	bool DetectActor = false;
 	
 	EDesireDirection DesireDirection = EDesireDirection::Front;
 	FComboInfo ComboInfo;
 	FTimerHandle SprintTimer;
-	
-	UPROPERTY()
-	AActor* CurrentDetectedActor;
 };

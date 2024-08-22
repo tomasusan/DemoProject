@@ -15,7 +15,8 @@ public class DemoProject : ModuleRules
 			"Engine",
 			"InputCore",
 			"GamePlayTasks",
-			"NavigationSystem"
+			"NavigationSystem",
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

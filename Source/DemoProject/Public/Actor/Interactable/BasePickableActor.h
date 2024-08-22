@@ -7,6 +7,7 @@
 #include "DemoProject/ItemCoreTypes.h"
 #include "BasePickableActor.generated.h"
 
+class UTextRenderComponent;
 class UDataTable;
 /**
  * 
@@ -33,10 +34,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	UStaticMeshComponent* ActorMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UTextRenderComponent* TextComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="ItemInfo")
 	UDataTable* DataTable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="ItemInfo")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ItemInfo")
 	FName ItemID;
 
 private:

@@ -5,6 +5,8 @@
 
 #include "DemoProject/ItemInfoUtils.h"
 
+DEFINE_LOG_CATEGORY_STATIC(BackpackComponentLog, All, All);
+
 // Sets default values for this component's properties
 UBackpackComponent::UBackpackComponent()
 {
@@ -42,22 +44,26 @@ TArray<FItemInBackpackState> UBackpackComponent::GetItemsToBackpack() const
 
 void UBackpackComponent::BackpackAdd(const FItemInBackpackState& NewItem)
 {
-	for (auto Item : Items)
+	UE_LOG(BackpackComponentLog, Warning, TEXT("Now Calling BackpackAdd"));
+	for (auto& Item : Items)
 	{
 		if (Item.ID == NewItem.ID)
 		{
 			if (Item.Stackable && Item.CurrentNum < Item.MaxStackNum)
 			{
+				UE_LOG(BackpackComponentLog, Warning, TEXT("Add One"));
 				Item.CurrentNum++;
 				return;
 			}
 			else
 			{
+				UE_LOG(BackpackComponentLog, Warning, TEXT("Add new One, One has exsisted"));
 				Items.Add(NewItem);
 				return;
 			}
 		}
 	}
+	UE_LOG(BackpackComponentLog, Warning, TEXT("Add total One"));
 	Items.Add(NewItem);
 }
 

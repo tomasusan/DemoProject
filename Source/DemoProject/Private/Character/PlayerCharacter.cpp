@@ -14,9 +14,12 @@
 #include "Animation/StopDetectAnimNotify.h"
 #include "Character/BaseCharacterMovementComponent.h"
 #include "Component/BackpackComponent.h"
+#include "Component/InteractComponent.h"
+#include "Component/UIComponent.h"
 #include "DemoProject/AnimUtils.h"
 #include "Component/WeaponComponent.h"
 #include "Components/BoxComponent.h"
+#include "DemoProject/ItemInfoUtils.h"
 #include "Interface/InteractInterface.h"
 #include "Weapon/BaseWeaponActor.h"
 
@@ -27,6 +30,8 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 {
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>("WeaponComponent");
 	BackpackComponent = CreateDefaultSubobject<UBackpackComponent>("BackpackComponent");
+	UIComponent = CreateDefaultSubobject<UUIComponent>("UIComponent");
+	InteractComponent = CreateDefaultSubobject<UInteractComponent>("InteractComponent");
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
 	BoxCollision->SetBoxExtent(FVector(32.f, 32.f, 96.f));
@@ -34,14 +39,6 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 	BoxCollision->SetupAttachment(GetRootComponent());
 
 	BoxCollision->SetCollisionResponseToAllChannels(ECR_Overlap);
-
-	// FScriptDelegate OverlapBeginDelegate;
-	// OverlapBeginDelegate.BindUFunction(this, "OnOverlapBegin");
-	// BoxCollision->OnComponentBeginOverlap.Add(OverlapBeginDelegate);
-	//
-	// FScriptDelegate OverlapEndDelegate;
-	// OverlapEndDelegate.BindUFunction(this, "OnOverlapEnd");
-	// BoxCollision->OnComponentEndOverlap.Add(OverlapEndDelegate);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -124,6 +121,17 @@ void APlayerCharacter::MoveRight(const float Val)
 	Super::MoveRight(Val);
 }
 
+void APlayerCharacter::LoadItemInfo(const FItemBasicInfo& Info) const
+{
+	InteractComponent->LoadItemInfo(Info);
+}
+
+void APlayerCharacter::BackpackAdd(const FItemBasicInfo& NewItem) const
+{
+	const auto InBackpackState = FItemInfoUtils::ConvertInBackpackState(NewItem);
+	BackpackComponent->BackpackAdd(InBackpackState);
+}
+
 void APlayerCharacter::OpenCombo()
 {
 	ComboInfo.CanCombo = true;
@@ -142,6 +150,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		PlayerInputComponent->BindAction("Attack_Pro", IE_Pressed, this, &APlayerCharacter::ProAttack);
 		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &APlayerCharacter::Interact);
+		PlayerInputComponent->BindAction("OpenBackpack", IE_Pressed, UIComponent, &UUIComponent::SwitchBackpack);
 	}
 }
 
@@ -155,20 +164,6 @@ void APlayerCharacter::LoadAttackNotifyState()
 		CallAttackNotify->CallAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::CallAttack);
 		CallAttackNotify->EndAttackDelegate.AddUObject(WeaponComponent, &UWeaponComponent::EndAttack);
 	}
-}
-
-void APlayerCharacter::OnOverlapBegin(AActor* OtherActor)
-{
-	UE_LOG(PlayerCharacterLog, Display, TEXT("%s: Start Overlap"), *OtherActor->GetName());
-
-	CurrentDetectedActor = OtherActor;
-	DetectActor = true;
-}
-
-void APlayerCharacter::OnOverlapEnd(AActor* OtherActor)
-{
-	CurrentDetectedActor = nullptr;
-	DetectActor = false;
 }
 
 void APlayerCharacter::InitAnimation()
@@ -302,10 +297,16 @@ void APlayerCharacter::OnCheckShiftDown()
 
 void APlayerCharacter::Interact()
 {
+	//f(!DetectActor) return;
+	const auto DetectActor = InteractComponent->GetDetectedActor();
 	if(!DetectActor) return;
-	if(CurrentDetectedActor->Implements<UInteractInterface>())
+	if (DetectActor->Implements<UInteractInterface>())
 	{
-		IInteractInterface::Execute_Interact(CurrentDetectedActor, this);
+		IInteractInterface::Execute_Interact(DetectActor, this);
+	}
+	else
+	{
+		UE_LOG(PlayerCharacterLog, Warning, TEXT("No Interact Implemented"));
 	}
 }
 
@@ -333,8 +334,4 @@ void APlayerCharacter::ProcessDesireDirection()
 		DesireDirection = Back;
 	else if (Direction >= -135 && Direction < -45)
 		DesireDirection = Right;
-}
-
-void APlayerCharacter::BackpackAdd()
-{
 }
