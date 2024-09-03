@@ -10,11 +10,7 @@ DEFINE_LOG_CATEGORY_STATIC(BackpackComponentLog, All, All);
 // Sets default values for this component's properties
 UBackpackComponent::UBackpackComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
@@ -24,16 +20,6 @@ void UBackpackComponent::BeginPlay()
 	Super::BeginPlay();
 
 	LoadToBackpack(Items_ID);
-	// ...
-}
-
-
-// Called every frame
-void UBackpackComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                       FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	// ...
 }
 
@@ -65,6 +51,13 @@ void UBackpackComponent::BackpackAdd(const FItemInBackpackState& NewItem)
 	}
 	UE_LOG(BackpackComponentLog, Warning, TEXT("Add total One"));
 	Items.Add(NewItem);
+
+	if (TypeTable)
+	{
+		const auto ItemType = FItemInfoUtils::GetItemType(TypeTable, NewItem.ID);
+		const auto Num = GetItemNums(NewItem);
+		OnPickItemDelegate.Broadcast(ItemType, Num);
+	}
 }
 
 void UBackpackComponent::LoadToBackpack(TArray<FName> NewItems)
@@ -77,4 +70,46 @@ void UBackpackComponent::LoadToBackpack(TArray<FName> NewItems)
 			BackpackAdd(InBackpackInfo);
 		}
 	}
+}
+
+int32 UBackpackComponent::GetItemNums(const FItemInBackpackState& CheckItem)
+{
+	int32 Ret = 0;
+	for (const auto Item : Items)
+	{
+		if (Item.ID == CheckItem.ID)
+		{
+			Ret += Item.CurrentNum;
+		}
+	}
+
+	return Ret;
+}
+
+int32 UBackpackComponent::GetItemNums(const FString& ID)
+{
+	int32 Ret = 0;
+	for (const auto Item : Items)
+	{
+		if (Item.ID == ID)
+		{
+			Ret += Item.CurrentNum;
+		}
+	}
+
+	return Ret;
+}
+
+int32 UBackpackComponent::GetItemNums(const ETagType Type)
+{
+	int32 Ret = 0;
+	for (const auto Item : Items)
+	{
+		if (FItemInfoUtils::GetItemType(TypeTable, Item.ID) == Type)
+		{
+			Ret += Item.CurrentNum;
+		}
+	}
+
+	return Ret;
 }

@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "DemoProject/ItemCoreTypes.h"
+#include "DemoProject/TagCoreTypes.h"
 #include "BackpackComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnPickItemSignature, ETagType, int32);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DEMOPROJECT_API UBackpackComponent : public UActorComponent
@@ -22,10 +24,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
 	UFUNCTION(BlueprintCallable)
 	TArray<FItemInBackpackState> GetItemsToBackpack() const;
 
@@ -33,12 +31,21 @@ public:
 	UDataTable* Datatable;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="BackpackComponent")
+	UDataTable* TypeTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="BackpackComponent")
 	TArray<FName> Items_ID;
 
 	void BackpackAdd(const FItemInBackpackState& NewItem);
+	
+	FOnPickItemSignature OnPickItemDelegate;
+
 
 private:
 	void LoadToBackpack(TArray<FName> NewItems);
+	int32 GetItemNums(const FItemInBackpackState& CheckItem);
+	int32 GetItemNums(const FString& ID);
+	int32 GetItemNums(const ETagType Type);
 
 	TArray<FItemInBackpackState> Items;
 };

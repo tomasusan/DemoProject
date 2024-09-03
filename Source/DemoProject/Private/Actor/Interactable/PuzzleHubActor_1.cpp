@@ -3,6 +3,7 @@
 
 #include "Actor/Interactable/PuzzleHubActor_1.h"
 
+#include "Actor/DoorTriggerActor.h"
 #include "Actor/Interactable/BaseInteractableActor.h"
 #include "Engine/DataTable.h"
 #include "Actor/Interactable/PuzzleActor_1.h"
@@ -44,6 +45,12 @@ void APuzzleHubActor_1::OnActorTriggered(const int32 ActorIndex)
 	else if (Finished)
 	{
 		UE_LOG(HubActorLog, Warning, TEXT("Right Order"));
+		// if(TriggerActor->Implements<UTriggerInterface>())
+		// {
+		// 	ITriggerInterface::Execute_Triggered(TriggerActor);
+		// }
+		RightOrderDelegate.Broadcast();
+		CallTriggerDelegate.Broadcast();
 	}
 }
 
@@ -60,8 +67,20 @@ void APuzzleHubActor_1::SpawnPuzzleActor()
 
 			Actor->TriggeredDelegate.AddUObject(this, &APuzzleHubActor_1::OnActorTriggered);
 			ResetAllDelegate.AddUObject(Actor, &APuzzleActor_1::ResetState);
+			RightOrderDelegate.AddUObject(Actor, &APuzzleActor_1::CallDissolve);
 		}
 		Index++;
+	}
+
+	Index = 0;
+	for(auto Transform:TriggerLocations)
+	{
+		if(const auto Actor = GetWorld()->SpawnActor<ADoorTriggerActor>(TriggerActorClass))
+		{
+			Actor->SetActorTransform(Transform);
+			TriggerActor = Actor;
+			CallTriggerDelegate.AddUObject(Actor, &ADoorTriggerActor::Triggered_Implementation);
+		}
 	}
 }
 

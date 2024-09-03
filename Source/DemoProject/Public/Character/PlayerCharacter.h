@@ -13,6 +13,7 @@
  * 
  */
 
+class UMissionTagComponent;
 class UInteractComponent;
 class UUIComponent;
 class UBackpackComponent;
@@ -87,6 +88,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
 	UBoxComponent* BoxCollision;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
+	UMissionTagComponent* MissionTagComponent;
+
 public:
 	virtual void Attack() override;
 	virtual void ProAttack();
@@ -116,7 +120,6 @@ private:
 	void OnCheckShiftDown();
 	void Interact();
 	void ProcessDesireDirection();
-	void BackpackAdd();
 
 	template <typename T>
 	T* SpawnWeapon(TSubclassOf<T> WeaponClass, FName SocketName);

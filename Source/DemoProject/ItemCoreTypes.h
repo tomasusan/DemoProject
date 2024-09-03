@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/DataTable.h"
+#include "DemoProject/TagCoreTypes.h"
 #include "ItemCoreTypes.generated.h"
 
 UENUM(BlueprintType)
@@ -9,6 +10,18 @@ enum class EItemType: uint8
 	Weapon,
 	Armour,
 	None
+};
+
+USTRUCT(BlueprintType)
+struct FItemID2TagType : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FString ID;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	ETagType Type;
 };
 
 USTRUCT(BlueprintType)

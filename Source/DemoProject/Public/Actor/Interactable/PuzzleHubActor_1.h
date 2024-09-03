@@ -8,6 +8,8 @@
 
 class UDataTable;
 DECLARE_MULTICAST_DELEGATE(FResetAllSignature);
+DECLARE_MULTICAST_DELEGATE(FRightOrderSignature);
+DECLARE_MULTICAST_DELEGATE(FCallTriggerSignature);
 
 UCLASS()
 class DEMOPROJECT_API APuzzleHubActor_1 : public AActor
@@ -21,8 +23,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="PuzzleActor")
 	TSubclassOf<AActor> PuzzleActorClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="TriggerActor")
+	TSubclassOf<AActor> TriggerActorClass;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PuzzleActor")
 	TArray<FTransform> SpawnLocations;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="TriggerActor")
+	TArray<FTransform> TriggerLocations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PuzzleActor")
 	FString Order;
@@ -42,9 +50,14 @@ public:
 
 private:
 	void SpawnPuzzleActor();
+	
+	UPROPERTY()
+	AActor* TriggerActor;
 
 	FString CurrentTriggerOrder = "";
-	bool CheckOrder(FString ExpectedOrder, FString CurrentOrder, bool& Finished);
+	static bool CheckOrder(FString ExpectedOrder, FString CurrentOrder, bool& Finished);
 
 	FResetAllSignature ResetAllDelegate;
+	FRightOrderSignature RightOrderDelegate;
+	FCallTriggerSignature CallTriggerDelegate;
 };

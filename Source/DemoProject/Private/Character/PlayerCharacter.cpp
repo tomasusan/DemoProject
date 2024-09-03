@@ -15,6 +15,7 @@
 #include "Character/BaseCharacterMovementComponent.h"
 #include "Component/BackpackComponent.h"
 #include "Component/InteractComponent.h"
+#include "Component/MissionTagComponent.h"
 #include "Component/UIComponent.h"
 #include "DemoProject/AnimUtils.h"
 #include "Component/WeaponComponent.h"
@@ -32,6 +33,7 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjInit): Super(
 	BackpackComponent = CreateDefaultSubobject<UBackpackComponent>("BackpackComponent");
 	UIComponent = CreateDefaultSubobject<UUIComponent>("UIComponent");
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>("InteractComponent");
+	MissionTagComponent = CreateDefaultSubobject<UMissionTagComponent>("MissionTagComponent");
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>("BoxCollision");
 	BoxCollision->SetBoxExtent(FVector(32.f, 32.f, 96.f));

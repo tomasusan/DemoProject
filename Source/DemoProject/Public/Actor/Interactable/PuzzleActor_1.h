@@ -29,6 +29,13 @@ public:
 	virtual void SetIndex(const int32 NewIndex) override;
 
 	void ResetState();
+	void CallDissolve();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Dissolve")
+	float DissolveTime = 1.5;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Dissolve")
+	float DeltaDissolveTime = 0.01;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Component")
@@ -47,4 +54,21 @@ private:
 	bool ShowMesh_2 = false;
 
 	void SwitchShowMesh_2();
+
+	void OnMeshDissolve();
+
+	float MeshCurrentDissolve = 1.2;
+	float MeshCurrentDissolveTime = 0;
+
+	FTimerHandle MeshDissolveHandler;
+
+
+	float GetDissolveVelocity(float Time) const;
+	float GetDissolveValue(float Time) const;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* DMI_1;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* DMI_2;
 };
