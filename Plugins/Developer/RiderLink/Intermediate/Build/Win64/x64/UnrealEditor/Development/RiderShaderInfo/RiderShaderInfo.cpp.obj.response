@@ -1,4 +1,4 @@
-E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderShaderInfo\RiderShaderInfo.cpp
+D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderShaderInfo\RiderShaderInfo.cpp
 /I .
 /I Runtime\TraceLog\Public
 /I Runtime\Core\Public
@@ -7,16 +7,17 @@ E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderShaderInfo\RiderShad
 /I Runtime\Json\Public
 /I Runtime\RenderCore\Public
 /I Runtime\RHI\Public
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source
-/I ThirdParty\mimalloc\include
-/I "F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\INCLUDE"
-/I "F:\Windows Kits\10\include\10.0.18362.0\ucrt"
-/I "F:\Windows Kits\10\include\10.0.18362.0\shared"
-/I "F:\Windows Kits\10\include\10.0.18362.0\um"
-/I "F:\Windows Kits\10\include\10.0.18362.0\winrt"
-/FI"E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\Definitions.h"
-/Fo"E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.obj"
-/sourceDependencies E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.dep.json
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source
+/external:W0
+/external:I ThirdParty\mimalloc\include
+/external:I "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.34.31933\INCLUDE"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt"
+/FI"D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\Definitions.h"
+/Fo"D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.obj"
+/sourceDependencies D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderShaderInfo\RiderShaderInfo.cpp.dep.json
 /Zc:inline
 /nologo
 /Oi

@@ -1,6 +1,6 @@
-E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLC\Private\RiderLC.cpp
+D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderLC\Private\RiderLC.cpp
 /I .
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLC\Private
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderLC\Private
 /I Runtime\TraceLog\Public
 /I Runtime\Core\Public
 /I Runtime
@@ -273,39 +273,40 @@ E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLC\Private\RiderLC.c
 /I Runtime\MovieSceneCapture\Public
 /I ..\Intermediate\Build\Win64\UnrealEditor\Inc\AnimationDataController\UHT
 /I Developer\AnimationDataController\Public
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public\Model\Library
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public\Model\RdEditorProtocol
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_core_cpp
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_core_cpp\src\main
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main\util
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_gen_cpp\src
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\ordered-map\include
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\optional\tl
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\variant\include
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\string-view-lite\include
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\spdlog\include
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\clsocket\src
-/I E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\CTPL\include
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public\Model\Library
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public\Model\RdEditorProtocol
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RiderLink\Public
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_core_cpp
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_core_cpp\src\main
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_framework_cpp\src\main\util
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\src\rd_gen_cpp\src
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\ordered-map\include
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\optional\tl
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\variant\include
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\string-view-lite\include
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\spdlog\include
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\clsocket\src
+/I D:\Android\DemoProject\Plugins\Developer\RiderLink\Source\RD\thirdparty\CTPL\include
 /I ..\Intermediate\Build\Win64\UnrealEditor\Inc\LiveCoding\UHT
 /I Developer\Windows\LiveCoding\Public
 /I Developer\Windows
-/I ThirdParty\mimalloc\include
-/I ThirdParty\LibTiff\Source\Win64
-/I ThirdParty\LibTiff\Source
-/I "F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\INCLUDE"
-/I "F:\Windows Kits\10\include\10.0.18362.0\ucrt"
-/I "F:\Windows Kits\10\include\10.0.18362.0\shared"
-/I "F:\Windows Kits\10\include\10.0.18362.0\um"
-/I "F:\Windows Kits\10\include\10.0.18362.0\winrt"
-/FI"E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\Definitions.h"
-/Fo"E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\RiderLC.cpp.obj"
-/sourceDependencies E:\UEPJ\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\RiderLC.cpp.dep.json
+/external:W0
+/external:I ThirdParty\mimalloc\include
+/external:I ThirdParty\LibTiff\Source\Win64
+/external:I ThirdParty\LibTiff\Source
+/external:I "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.34.31933\INCLUDE"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt"
+/FI"D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\Definitions.h"
+/Fo"D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\RiderLC.cpp.obj"
+/sourceDependencies D:\Android\DemoProject\Plugins\Developer\RiderLink\Intermediate\Build\Win64\x64\UnrealEditor\Development\RiderLC\RiderLC.cpp.dep.json
 /Zc:inline
 /nologo
 /Oi
